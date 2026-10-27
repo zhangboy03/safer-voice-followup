@@ -1,0 +1,165 @@
+[project]
+name = "pinchi-ai-call-center"
+version = "1.0.0"
+requires-python = ">=3.12"
+description = "品驰医疗 AI 客服系统"
+
+dependencies = [
+    "fastapi>=0.109.0",
+    "uvicorn[standard]>=0.27.0",
+    "websockets>=12.0",
+    "dashscope>=1.17.0",
+    "openai>=1.0.0",
+    "python-dotenv>=1.0.0",
+    "pydantic-settings>=2.0.0",
+    "pydantic>=2.0.0",
+    "numpy>=1.24.0",
+    "jieba>=0.42.1",
+    "aiosqlite>=0.19.0",
+    "structlog>=24.1.0",
+    "livekit>=1.1.2",
+    "livekit-api>=1.1.0",
+    "transformers",
+    "onnxruntime>=1.24.4",
+    "httpx>=0.26.0",
+    "pyyaml>=6.0",
+    "huggingface-hub>=0.20.0",
+    "speechbrain>=1.0.0",
+    # torch / torchaudio are speechbrain transitive deps; declared here so
+    # the [tool.uv.sources] CPU-wheel pins below apply consistently.
+    "torch>=2.0.0",
+    "torchaudio>=2.0.0",
+    "silero-vad>=5.1",  # restored 2026-05-22 for VAD primary selection bake-off
+]
+
+[project.optional-dependencies]
+knowledge-local = [
+    "sentence-transformers>=2.2.0",
+    "torch>=2.0.0",
+    "faiss-cpu>=1.7.0",
+]
+experiments = [
+    "huggingface-hub>=0.20.0",
+    "onnxruntime>=1.18.0",
+    "torch>=2.0.0",
+    "transformers>=4.47.1",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.11.0",
+    "mypy>=1.10.0",
+    "deptry>=0.25.1",
+    "vulture>=2.15",
+    "pre-commit>=3.0.0",
+    "watchfiles>=1.1.1",
+]
+eval = [
+    "pypdf>=3.0.0",
+    "pdfplumber>=0.10.0",
+    "jsonschema>=4.0.0",
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "pytest-repeat>=0.9.3",
+    "pytest-xdist>=3.6.0",
+    "pytest-rerunfailures>=14.0",
+    "matplotlib>=3.10.8",
+    "scipy>=1.17.1",
+    "soundfile>=0.13.1",
+]
+
+[tool.uv.sources]
+# Pin CPU torch wheels for Linux x86_64 (i.e. ECS deploy) to Aliyun mirror.
+# Without this, lockfile defaults to GPU torch from PyPI which pulls in ~4GB
+# of nvidia-cuda-* packages we cannot use (ECS has no GPU) and which routes
+# through Fastly CDN that aliyun ECS cannot reach. Mac/dev hosts have no
+# marker match here and fall back to default PyPI (arm64 torch is CPU-only).
+torch = [
+    { url = "https://mirrors.aliyun.com/pytorch-wheels/cpu/torch-2.10.0%2Bcpu-cp312-cp312-manylinux_2_28_x86_64.whl", marker = "sys_platform == 'linux' and platform_machine == 'x86_64'" },
+]
+torchaudio = [
+    { url = "https://mirrors.aliyun.com/pytorch-wheels/cpu/torchaudio-2.10.0%2Bcpu-cp312-cp312-manylinux_2_28_x86_64.whl", marker = "sys_platform == 'linux' and platform_machine == 'x86_64'" },
+]
+
+[tool.deptry]
+extend_exclude = ["scripts/", "presentation/", "src/eval/"]
+package_module_name_map = { "faiss-cpu" = ["faiss"], "huggingface-hub" = ["huggingface_hub"], "python-dotenv" = ["dotenv"], "sentence-transformers" = ["sentence_transformers"] }
+per_rule_ignores = { DEP002 = ["python-dotenv", "uvicorn"] }
+
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+extend-exclude = ["scripts/"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["src", "server"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+asyncio_mode = "auto"
+markers = [
+    "integration: marks tests as integration tests (may require API keys)",
+    "live_api: marks tests that hit a real third-party LLM API (skipped when key missing)",
+    "standard: 标准档场景",
+    "challenge: 挑战档场景",
+    "edge: 边缘 case",
+    "asr: 4.2.1 / 4.2.6 ASR 相关",
+    "llm_ttft: 4.2.3",
+    "tts_ttfa: 4.2.4",
+    "e2e_ttfa: 4.2.5",
+    "sop: 4.3.1",
+    "dual_vote: 4.3.3",
+    "transfer: 4.3.4",
+    "rag: 4.4.2",
+    "ablation: 4.6",
+    "warm_agent: (v1.1 deferred) 使用常驻 warm agent",
+]
+addopts = "-v --tb=short"
+
+[tool.mypy]
+files = [
+    "src/core/config.py",
+    "src/core/session.py",
+    "src/core/rate_limiter.py",
+    "src/core/ttfa_budget.py",
+    "src/core/logging.py",
+    "src/core/call_tracer.py",
+    "src/knowledge/models.py",
+    "src/perception/models.py",
+    "src/memory/models.py",
+    "src/handoff/models.py",
+]
+python_version = "3.12"
+follow_imports = "silent"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+check_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = [
+    "src.core.config",
+    "src.core.session",
+    "src.core.rate_limiter",
+    "src.core.ttfa_budget",
+    "src.core.logging",
+    "src.core.call_tracer",
+    "src.knowledge.models",
+    "src.perception.models",
+    "src.memory.models",
+    "src.handoff.models",
+]
+disallow_untyped_defs = true
+disallow_any_generics = true
+warn_unreachable = true
+
+[[tool.mypy.overrides]]
+module = ["dashscope.*", "jieba.*", "faiss.*"]
+ignore_missing_imports = true

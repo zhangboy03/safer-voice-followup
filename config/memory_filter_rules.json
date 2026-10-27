@@ -1,0 +1,34 @@
+{
+  "sensitive_patterns": [
+    "\\d+mg",
+    "\\d+片/天",
+    "\\d+ml",
+    "\\d{11}",
+    "\\d{15,18}",
+    "\\d+\\.\\d+mmol",
+    "血压\\d+/\\d+",
+    "\\d+U/L",
+    "\\d+\\.\\d+g/dL"
+  ],
+  "blocklist_keywords": [
+    "抑郁症",
+    "精神分裂",
+    "自杀",
+    "自残",
+    "艾滋",
+    "HIV",
+    "梅毒",
+    "乙肝",
+    "丙肝",
+    "癌症晚期",
+    "恶性肿瘤",
+    "吸毒",
+    "性病",
+    "堕胎",
+    "流产"
+  ],
+  "max_content_length": 200,
+  "min_content_length": 5,
+  "min_confidence": 0.5,
+  "dedup_threshold": 0.8
+}

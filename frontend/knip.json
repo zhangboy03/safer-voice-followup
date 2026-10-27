@@ -1,0 +1,12 @@
+{
+  "entry": [
+    "public/presentation/content.js",
+    "public/presentation/slides.js",
+    "public/presentation/alternatives-20261026/**/*.js",
+    "src/components/dualLlmTraceModel.test.ts",
+    "src/components/feedbackModel.test.ts",
+    "src/components/latencyPanelModel.test.ts",
+    "src/components/csrCallModel.test.ts",
+    "src/components/callRouting.test.ts"
+  ]
+}

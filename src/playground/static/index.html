@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Brain Playground</title>
+  <meta name="pg-token" content="__PG_TOKEN__" />
+  <meta name="pg-arch" content="__PG_ARCH__" />
+  <meta name="pg-model" content="__PG_MODEL__" />
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <header id="controls">
+    <label>架构 <select id="arch"><option value="ours">ours</option><option value="spa">spa</option><option value="solo">solo</option></select></label>
+    <label>模型 <input id="model" value="__PG_MODEL__" /></label>
+    <button id="reset">重置 / 新会话</button>
+    <button id="end">结束通话</button>
+    <span id="status"></span>
+  </header>
+  <main>
+    <section id="chat">
+      <div id="messages"></div>
+      <form id="inputForm">
+        <input id="input" autocomplete="off" placeholder="你来扮演患者，输入一句话…" />
+        <button>发送</button>
+      </form>
+    </section>
+    <aside id="trace"><h3>大脑追踪（最新一轮）</h3><div id="traceBody">等待第一轮…</div></aside>
+    <aside id="formPanel"><h3>随访问卷 <span id="formCount"></span></h3><div id="formBody">（solo 架构会在这里实时填表）</div></aside>
+  </main>
+  <script>window.PG_CATALOG = __PG_CATALOG__;</script>
+  <script src="/static/app.js"></script>
+</body>
+</html>

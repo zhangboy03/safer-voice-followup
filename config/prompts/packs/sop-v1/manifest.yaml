@@ -1,0 +1,47 @@
+name: sop-v1
+description: "Speech-first fast-judge SOP prompt pack"
+schema_version: sop_prompt_pack.v1
+defaults:
+  speech: {provider: qwen, model: qwen3.6-flash, temperature: 0.7, enable_thinking: false, response_format: text}
+  stage2_entry: {provider: qwen, model: qwen3.6-flash, temperature: 0.7, enable_thinking: false, response_format: text}
+  fast_judge: {provider: qwen, model: qwen3.6-flash, temperature: 0, enable_thinking: false, response_format: json_schema_strict}
+  review: {provider: qwen, model: qwen3.7-plus, temperature: 0, enable_thinking: false, response_format: json_schema_strict, max_tokens: 200}
+  exit_judge: {provider: qwen, model: qwen3.6-flash, temperature: 0, enable_thinking: false, response_format: json_schema_strict, max_tokens: 100}
+# Per-node model overrides (override defaults[lane].model for one node only).
+# knowledge_qa answers benefit from a stronger model — qwen3.6-flash over-compresses
+# KB content (drops the supporting reason), hurting answer completeness; qwen3.7-plus
+# stays equally brief but keeps the key points. Study 3 MVP: gold-success 1/4→3/4,
+# completeness 0.62→0.88, safety unchanged (0/6 under-deflection, 0 violations).
+node_overrides:
+  knowledge_qa:
+    speech: {model: qwen3.7-plus}
+persona:
+  main: persona.md
+silent_rescue:
+  main: speech/silent_rescue.md
+fast_judge:
+  default: fast_judge/default.md
+nodes:
+  greeting: {speech: speech/greeting.md, fast_judge: fast_judge/greeting.md}
+  identity: {speech: speech/identity.md, fast_judge: fast_judge/identity.md, stage2_entry: stage2_entry/identity.md}
+  symptom_rating: {speech: speech/symptom_rating.md, fast_judge: fast_judge/symptom_rating.md, stage2_entry: stage2_entry/symptom_rating.md}
+  programming: {speech: speech/programming.md, fast_judge: fast_judge/programming.md, stage2_entry: stage2_entry/programming.md}
+  education: {speech: speech/education.md, fast_judge: fast_judge/education.md, stage2_entry: stage2_entry/education.md}
+  service: {speech: speech/service.md, fast_judge: fast_judge/service.md, stage2_entry: stage2_entry/service.md}
+  insurance: {speech: speech/insurance.md, fast_judge: fast_judge/insurance.md, stage2_entry: stage2_entry/insurance.md}
+  knowledge_qa:
+    speech: speech/knowledge_qa.md
+    fast_judge: fast_judge/knowledge_qa.md
+    review: fast_judge/knowledge_qa_review.md
+    exit_judge: fast_judge/knowledge_qa_exit.md
+    speech_refuse: speech/knowledge_qa_refuse.md
+    speech_followup: speech/knowledge_qa_followup.md
+    speech_exit: speech/knowledge_qa_exit.md
+  closing: {speech: speech/closing.md, fast_judge: fast_judge/closing.md, stage2_entry: stage2_entry/closing.md}
+  human_transfer: {speech: speech/human_transfer.md, fast_judge: fast_judge/human_transfer.md}
+strategy:
+  next_speech_strategy: strategy/next_speech_strategy.md
+memory:
+  call_memory_extractor: memory/call_memory_extractor.md
+eval:
+  call_naturalness: eval/call_naturalness.md

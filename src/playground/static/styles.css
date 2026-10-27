@@ -1,0 +1,32 @@
+* { box-sizing: border-box; font-family: -apple-system, "PingFang SC", sans-serif; }
+body { margin: 0; height: 100vh; display: flex; flex-direction: column; }
+#controls { display: flex; gap: 12px; align-items: center; padding: 10px 16px; background: #1f2430; color: #eee; }
+#controls select, #controls input, #controls button { padding: 4px 8px; }
+#status { margin-left: auto; font-size: 13px; opacity: 0.85; }
+main { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 0; min-height: 0; }
+#chat { display: flex; flex-direction: column; border-right: 1px solid #ddd; min-height: 0; }
+#messages { flex: 1; overflow: auto; padding: 16px; }
+.msg { margin: 6px 0; padding: 8px 12px; border-radius: 10px; white-space: pre-wrap; max-width: 80%; }
+.msg.bot { background: #eef1f6; }
+.msg.you { background: #d7ebff; margin-left: auto; }
+#inputForm { display: flex; gap: 8px; padding: 12px; border-top: 1px solid #ddd; }
+#inputForm input { flex: 1; padding: 8px; }
+#trace { padding: 16px; overflow: auto; background: #fafbfc; }
+#trace h3 { margin-top: 0; }
+.flow { font-size: 15px; margin-bottom: 8px; }
+.bar { margin: 3px 0; font-size: 12px; }
+.bar i { display: inline-block; height: 8px; background: #4c8bf5; vertical-align: middle; margin-left: 6px; }
+.note { color: #888; font-size: 12px; margin-top: 8px; }
+main { grid-template-columns: 1.2fr 1fr 1fr; }
+#formPanel { padding: 16px; overflow: auto; background: #fff; border-left: 1px solid #ddd; }
+#formPanel h3 { margin-top: 0; }
+#formCount { font-size: 12px; color: #4c8bf5; font-weight: normal; }
+.fgroup { font-weight: 600; margin: 10px 0 4px; color: #555; font-size: 13px; }
+.frow { display: flex; align-items: baseline; gap: 6px; font-size: 13px; padding: 2px 0; }
+.frow .star { color: #e8a33d; }
+.pill { font-size: 11px; padding: 1px 6px; border-radius: 8px; }
+.pill.pending { background: #eceff3; color: #888; }
+.pill.confirmed { background: #d8f5e0; color: #1a7f43; }
+.pill.refused { background: #fde6cf; color: #b5651d; }
+.fval { color: #333; }
+.tcall { background: #fff7e6; border-left: 3px solid #e8a33d; padding: 4px 8px; margin: 4px 0; font-size: 12px; }

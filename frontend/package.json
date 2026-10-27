@@ -1,0 +1,30 @@
+{
+  "name": "pinchi-ai-test-console",
+  "version": "0.1.0",
+  "description": "品驰医疗 AI 客服系统 - 网页端开发测试台",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "tsc --noEmit",
+    "test:trace": "rm -rf /tmp/pinchi-trace-test && tsc --target ES2020 --module NodeNext --moduleResolution NodeNext --strict --skipLibCheck --outDir /tmp/pinchi-trace-test src/vite-env.d.ts src/components/dualLlmTraceModel.test.ts src/components/feedbackModel.test.ts src/components/latencyPanelModel.test.ts src/components/csrCallModel.test.ts src/components/callRouting.test.ts && node /tmp/pinchi-trace-test/components/dualLlmTraceModel.test.js && node /tmp/pinchi-trace-test/components/feedbackModel.test.js && node /tmp/pinchi-trace-test/components/latencyPanelModel.test.js && node /tmp/pinchi-trace-test/components/csrCallModel.test.js && node /tmp/pinchi-trace-test/components/callRouting.test.js",
+    "biome:check": "biome check src vite.config.ts",
+    "knip": "knip",
+    "test:demo": "node --test src/services/soloDemoClient.test.cjs"
+  },
+  "dependencies": {
+    "livekit-client": "^2.17.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.2.4",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^6.0.1",
+    "knip": "^5.63.1",
+    "typescript": "^5.6.3",
+    "vite": "^8.0.10"
+  }
+}
